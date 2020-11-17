@@ -46,6 +46,7 @@ setup(
     python_requires=">=3.6",
     install_requires=[
         'Django>=3.0,<3.2',
+        'django-autoslug',
     ],
     extras_require={
         'dev': [                            # Packages needed by developers
