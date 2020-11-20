@@ -65,7 +65,7 @@ class Project(CreateUpdateModelBase):
         return self.name
 
     def get_absolute_url(self):
-        return reverse("project_detail", kwargs={"pk": self.pk})
+        return reverse("releasenotes:project-details", kwargs={"project_slug": self.slug})
 
     def save(self, *args, **kwargs):
         value = self.name
@@ -114,7 +114,7 @@ class Release(CreateUpdateModelBase):
         return self.project.name + " - " + self.version_name
 
     def get_absolute_url(self):
-        return reverse("release:detail", kwargs={"pk": self.pk})
+        return reverse("releasenotes:release-details", kwargs={"release_slug": self.slug, "project_slug": self.project.slug})
 
     def save(self, *args, **kwargs):
         self.slug = ".".join([slugify(part, allow_unicode=True) for part in self.version_name.split(".")])      # This is done to keep the periods in the slug
@@ -177,7 +177,7 @@ class Note(CreateUpdateModelBase):
         return str(self.release) + " Note"
 
     def get_absolute_url(self):
-        return reverse("Note_detail", kwargs={"pk": self.pk})
+        return reverse("releasenotes:note-detail", kwargs={"pk": self.pk})
 
 
 class Translation(CreateUpdateModelBase):

@@ -7,7 +7,7 @@
 
 <h3>Releases</h3>
 {% for release in object.releases.all %}
-{{ release.version_name }}
+<a href="{{release.get_absolute_url}}">{{release.version_name}}</a>
 {% for note in release.notes.all %}
 <p>{{ note.note_type }}<br>{{ note.description }}</p>
 {% endfor %}

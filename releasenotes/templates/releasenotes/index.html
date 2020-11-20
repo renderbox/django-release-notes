@@ -4,5 +4,9 @@
 
 {% block content %}
 <h1>Release Notes Base HTML Template</h1>
-<a href="{% url 'releasenotes:list' %}">Release Notes</a>
+{% comment %} <a href="{% url 'releasenotes:project-details' %}">Release Notes</a> {% endcomment %}
+{% for project in object_list %}
+<a href="{{project.get_absolute_url}}">{{project.name}}</a>
+{% empty %}
+{% endfor %}
 {% endblock %}

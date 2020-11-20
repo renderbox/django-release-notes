@@ -1,0 +1,14 @@
+{% extends "releasenotes/base.html" %}
+
+{% block title %}Release Notes - Release Details{% endblock %}
+
+{% block content %}
+<h1>Project: {{ object.project.name }}</h1>
+
+<h3>Release <a href="{{object.get_absolute_url}}">{{object.version_name}}</a></h3>
+
+{% for note in object.notes.all %}
+<p>{{ note.note_type }}<br>{{ note.description }}</p>
+{% endfor %}
+
+{% endblock %}
