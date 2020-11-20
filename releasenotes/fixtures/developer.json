@@ -1,0 +1,135 @@
+[
+    {
+        "model": "sites.site",
+        "pk": 1,
+        "fields": {
+            "domain": "example.com",
+            "name": "example.com"
+        }
+    },
+    {
+        "model": "releasenotes.project",
+        "pk": 1,
+        "fields": {
+            "created": "2020-11-18T18:49:56.028Z",
+            "updated": "2020-11-18T18:49:56.028Z",
+            "deleted": false,
+            "uuid": "a47488d2-e793-4331-9f16-fa5df54f5a94",
+            "name": "ExampleApp",
+            "site": 1,
+            "slug": "exampleapp"
+        }
+    },
+    {
+        "model": "releasenotes.release",
+        "pk": 1,
+        "fields": {
+            "created": "2020-11-18T18:51:43.021Z",
+            "updated": "2020-11-18T22:02:17.924Z",
+            "deleted": false,
+            "uuid": "60c033bd-2cdb-4260-9180-241f4f950b99",
+            "name": "",
+            "project": 1,
+            "slug": "v0.8.31",
+            "major": 0,
+            "minor": 8,
+            "patch": "31",
+            "state": 10
+        }
+    },
+    {
+        "model": "releasenotes.audience",
+        "pk": 1,
+        "fields": {
+            "uuid": "3b9b3992-00a7-41bf-91b4-59e1042b9762",
+            "name": "Example App Team",
+            "project": 1,
+            "slug": "example-app-team",
+            "permission": null
+        }
+    },
+    {
+        "model": "releasenotes.audience",
+        "pk": 2,
+        "fields": {
+            "uuid": "e4c01b75-01f5-4cc3-8e18-c7fc8a05db6b",
+            "name": "Administrators",
+            "project": 1,
+            "slug": "administrators",
+            "permission": null
+        }
+    },
+    {
+        "model": "releasenotes.note",
+        "pk": 1,
+        "fields": {
+            "created": "2020-11-18T22:25:46.770Z",
+            "updated": "2020-11-18T22:25:46.770Z",
+            "deleted": false,
+            "uuid": "015afd1b-459b-4234-8f44-74ef8571ccbd",
+            "note_type": 0,
+            "release": 1,
+            "audience": null,
+            "description": "This is a note about the new things in the Example App",
+            "order": 0
+        }
+    },
+    {
+        "model": "releasenotes.note",
+        "pk": 2,
+        "fields": {
+            "created": "2020-11-18T22:50:08.659Z",
+            "updated": "2020-11-18T22:50:26.401Z",
+            "deleted": false,
+            "uuid": "868565f0-d092-4eb6-bc8f-b9fc76a7f0f2",
+            "note_type": 10,
+            "release": 1,
+            "audience": null,
+            "description": "Buggy Stuff",
+            "order": 0
+        }
+    },
+    {
+        "model": "releasenotes.note",
+        "pk": 3,
+        "fields": {
+            "created": "2020-11-18T22:50:52.592Z",
+            "updated": "2020-11-18T22:51:15.493Z",
+            "deleted": false,
+            "uuid": "6dca59f4-d162-4b9b-bd70-32b75fd0985a",
+            "note_type": 20,
+            "release": 1,
+            "audience": null,
+            "description": "Known Issues",
+            "order": 0
+        }
+    },
+    {
+        "model": "releasenotes.note",
+        "pk": 4,
+        "fields": {
+            "created": "2020-11-18T22:50:08.659Z",
+            "updated": "2020-11-18T22:50:26.401Z",
+            "deleted": false,
+            "uuid": "868565f0-d092-4eb6-bc8f-b9fc76a7f0f6",
+            "note_type": 10,
+            "release": 1,
+            "audience": 2,
+            "description": "Admin Bugs",
+            "order": 1
+        }
+    },
+    {
+        "model": "releasenotes.translation",
+        "pk": 1,
+        "fields": {
+            "created": "2020-11-18T22:27:01.627Z",
+            "updated": "2020-11-18T22:27:01.627Z",
+            "deleted": false,
+            "note": 1,
+            "uuid": "053bc060-e74a-4a84-8392-67385b4588f2",
+            "language": "fr",
+            "description": "Bonjour!"
+        }
+    }
+]
