@@ -85,7 +85,7 @@ class Release(CreateUpdateModelBase):
 
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     name = models.CharField(_("Name"), max_length=80, blank=True)
-    project = models.ForeignKey(Project, verbose_name=_("Project"), on_delete=models.CASCADE)
+    project = models.ForeignKey(Project, verbose_name=_("Project"), on_delete=models.CASCADE, related_name="releases")
     slug = models.SlugField(_("Slug"), blank=True)
     major = models.IntegerField(_("Major"))
     minor = models.IntegerField(_("Minor"))
@@ -129,7 +129,7 @@ class Audience(models.Model):
 
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     name = models.CharField(_("Name"), max_length=80, blank=False)
-    project = models.ForeignKey(Project, verbose_name=_("Project"), on_delete=models.CASCADE)
+    project = models.ForeignKey(Project, verbose_name=_("Project"), on_delete=models.CASCADE, related_name="audiences")
     slug = models.SlugField(_("Slug"))
     permission = models.ForeignKey(Permission, verbose_name=_("Permission"), on_delete=models.CASCADE, related_name="permafrost_role", blank=True, null=True)
 
@@ -161,8 +161,8 @@ class Note(CreateUpdateModelBase):
 
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     note_type =  models.IntegerField(_("Note Type"), default=NoteType.NEW_FEATURE, choices=NoteType.choices)
-    release = models.ForeignKey(Release, verbose_name=_("release"), on_delete=models.CASCADE)
-    audience = models.ForeignKey(Audience, verbose_name=_("Audience"), on_delete=models.CASCADE, blank=True, null=True)
+    release = models.ForeignKey(Release, verbose_name=_("release"), on_delete=models.CASCADE, related_name="notes")
+    audience = models.ForeignKey(Audience, verbose_name=_("Audience"), on_delete=models.CASCADE, blank=True, null=True, related_name="release_notes")
     description = models.TextField(_("Description"))
     order = models.IntegerField(_("Order"), blank=True, default=0, help_text="The lower the number, the closer to the top of the list the note apears")
 
@@ -184,7 +184,7 @@ class Translation(CreateUpdateModelBase):
     '''
     This provides a mechanism to have localized release notes
     '''
-    note = models.ForeignKey(Note, verbose_name=_("Note"), on_delete=models.CASCADE)
+    note = models.ForeignKey(Note, verbose_name=_("Note"), on_delete=models.CASCADE, related_name="translations")
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     language = models.CharField(_("Language"), max_length=7, blank=False, choices=settings.LANGUAGES, default=get_default_language_code )   # Goal is to not trigger a migration on antoher project
     description = models.TextField(_("Description"))

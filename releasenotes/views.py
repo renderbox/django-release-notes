@@ -1,20 +1,21 @@
 from django.views.generic import TemplateView, DetailView, ListView
 
-from .models import Release
+from .models import Project
 
 class ReleaseNotesIndexView(TemplateView):
     template_name = "releasenotes/index.html"
 
 
-class ReleaseNotesListView(ListView):
-    """
-    All releases for the project
-    """
-    queryset = Release.objects.filter(project__slug="training-camp")
+# class ReleaseNotesListView(ListView):
+#     """
+#     All releases for the project
+#     """
+#     queryset = Release.objects.filter(project__slug="trainingcamp")
 
 
-class ReleaseNotesDetailView(DetailView):
+class ReleaseNotesProjectView(DetailView):
     """
     If a specific release is not provided, default to the current release
     """
-    queryset = Release.objects.filter(project__slug="training-camp", state=Release.ReleaseState.CURRENT)
+    model = Project
+    # queryset = Release.objects.filter(project__slug="training-camp", state=Release.ReleaseState.CURRENT)

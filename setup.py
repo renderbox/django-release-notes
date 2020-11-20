@@ -52,6 +52,7 @@ setup(
             'django-crispy-forms',
             'django-allauth',
             'django-extensions',
+            'ipython',
         ],
         'test': [],                         # Packages needed to run tests
         'prod': [],                         # Packages needed to run in the deployment
