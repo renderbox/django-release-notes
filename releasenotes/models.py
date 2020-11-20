@@ -9,14 +9,20 @@ from django.contrib.sites.managers import CurrentSiteManager
 from django.contrib.auth.models import Permission
 from django.utils.text import slugify
 
+###
+# HELPERS - TO NOT TRIGGER MIGRATIONS ON USER'S SITES
+###
+
+def get_default_site(*args, **kwargs):
+    return settings.SITE_ID
+
+def get_default_language_code(*args, **kwargs):
+    return settings.LANGUAGE_CODE
 
 ###############
 # CHOICES
 ###############
 
-class NoteType(models.IntegerChoices):
-    NEW_FEATURE = 0, _("New Feature")
-    BUG_FIX = 10, _("Bug Fix")
 
 
 ###############
@@ -45,9 +51,8 @@ class Project(CreateUpdateModelBase):
     """
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     name = models.CharField(_("Name"), max_length=80, blank=False)
-    site = models.ForeignKey(Site, verbose_name=_("Site"), on_delete=models.CASCADE, default=settings.SITE_ID, related_name="projects")
+    site = models.ForeignKey(Site, verbose_name=_("Site"), on_delete=models.CASCADE, default=get_default_site, related_name="projects")
     slug = models.SlugField(_("Slug"))
-    description = models.TextField(_("Description"))
 
     objects = models.Manager()
     on_site = CurrentSiteManager()
@@ -64,7 +69,7 @@ class Project(CreateUpdateModelBase):
 
     def save(self, *args, **kwargs):
         value = self.name
-        self.slug = slugify(value, allow_unicode=True)      # Add check to make sure it's unique...
+        self.slug = slugify(value, allow_unicode=True)      # Add check to make sure it's unique on the site
         super().save(*args, **kwargs)
 
 
@@ -72,30 +77,48 @@ class Release(CreateUpdateModelBase):
     """
     This is the actual release
     """
+
+    class ReleaseState(models.IntegerChoices):
+        FUTURE = 0, _("Future Release")
+        CURRENT = 10, _("Current Release")
+        PREVIOUS = 20, _("Previous Release")
+
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
-    name = models.CharField(_("Name"), max_length=80, blank=False)
+    name = models.CharField(_("Name"), max_length=80, blank=True)
     project = models.ForeignKey(Project, verbose_name=_("Project"), on_delete=models.CASCADE)
-    slug = models.SlugField(_("Slug"))
+    slug = models.SlugField(_("Slug"), blank=True)
     major = models.IntegerField(_("Major"))
     minor = models.IntegerField(_("Minor"))
-    path = models.CharField(_("Patch"), max_length=50)
-    published = models.BooleanField(_("Published"), default=False)
+    patch = models.CharField(_("Patch"), max_length=50, blank=True)
+    state =  models.IntegerField(_("Release State"), default=ReleaseState.CURRENT, choices=ReleaseState.choices)
 
     class Meta:
         verbose_name = _("Release")
         verbose_name_plural = _("Releases")
 
+    @property
+    def version_number(self):
+        result = [str(self.major), str(self.minor)]
+        if self.patch:
+            result.append(slugify(self.patch))
+
+        return ".".join(result)
+
+    @property
+    def version_name(self):
+        if not self.name:
+            return "v{}".format(self.version_number)
+        return "v{} - {}".format(self.version_number, self.name)
+
     def __str__(self):
-        return self.name
+        return self.project.name + " - " + self.version_name
 
     def get_absolute_url(self):
-        return reverse("release_detail", kwargs={"pk": self.pk})
+        return reverse("release:detail", kwargs={"pk": self.pk})
 
     def save(self, *args, **kwargs):
-        if self.patch:
-            self.slug = "{}.{}.{}.{}".format(slugify(self.name, allow_unicode=True), self.major, self.minor, slugify(self.patch))
-        else:
-            self.slug = "{}.{}.{}".format(slugify(self.name, allow_unicode=True), self.major, self.minor)
+        self.slug = ".".join([slugify(part, allow_unicode=True) for part in self.version_name.split(".")])      # This is done to keep the periods in the slug
+        # TODO: If this is changed to current, make sure there are no other are set to current
         super().save(*args, **kwargs)
 
 
@@ -130,20 +153,41 @@ class Note(CreateUpdateModelBase):
     """
     Note Sections attached to the Release.  These can be restricted to certian users via Django's permissions.
     """
+
+    class NoteType(models.IntegerChoices):
+        NEW_FEATURE = 0, _("New Features")
+        BUG_FIX = 10, _("Bug Fixes")
+        KNOWN_ISSUES = 20, _("Known Issues")
+
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
-    name = models.CharField(_("Name"), max_length=80, blank=False)
     note_type =  models.IntegerField(_("Note Type"), default=NoteType.NEW_FEATURE, choices=NoteType.choices)
     release = models.ForeignKey(Release, verbose_name=_("release"), on_delete=models.CASCADE)
-    audience = models.ForeignKey(Audience, verbose_name=_("Audience"), on_delete=models.CASCADE, blank=True)
+    audience = models.ForeignKey(Audience, verbose_name=_("Audience"), on_delete=models.CASCADE, blank=True, null=True)
     description = models.TextField(_("Description"))
-    order = models.IntegerField(_("Order"))
+    order = models.IntegerField(_("Order"), blank=True, default=0, help_text="The lower the number, the closer to the top of the list the note apears")
 
     class Meta:
         verbose_name = _("Note")
         verbose_name_plural = _("Notes")
+        unique_together = ['release', 'note_type', 'audience']
 
     def __str__(self):
-        return self.name
+        if self.audience:
+            return str(self.release) + " " + self.audience + " Note"
+        return str(self.release) + " Note"
 
     def get_absolute_url(self):
         return reverse("Note_detail", kwargs={"pk": self.pk})
+
+
+class Translation(CreateUpdateModelBase):
+    '''
+    This provides a mechanism to have localized release notes
+    '''
+    note = models.ForeignKey(Note, verbose_name=_("Note"), on_delete=models.CASCADE)
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+    language = models.CharField(_("Language"), max_length=7, blank=False, choices=settings.LANGUAGES, default=get_default_language_code )   # Goal is to not trigger a migration on antoher project
+    description = models.TextField(_("Description"))
+
+    def __str__(self):
+        return str(self.note) + " - " + self.language

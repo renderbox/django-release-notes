@@ -3,6 +3,11 @@
 {% block title %}Release Notes - Home{% endblock %}
 
 {% block content %}
-<h1>Release Notes Base HTML Template</h1>
-<a href="{% url 'releasenotes:list' %}">Release Notes</a>
+<h1>Releases</h1>
+{% for object in object_list %}
+FOO
+{% endfor %}
+
+
+
 {% endblock %}
