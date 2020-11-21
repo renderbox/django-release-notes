@@ -14,27 +14,6 @@ jobs:
       matrix:
         python-version: [3.7]
 
-    # # Uncomment if working with Postgres
-    # # Service containers to run with `container-job`
-    # services:
-    #   # Label used to access the service container
-    #   postgres:
-    #     # Docker Hub image
-    #     image: postgres:11
-    #     # Provide the password for postgres
-    #     env:
-    #       POSTGRES_USER: postgres
-    #       POSTGRES_PASSWORD: postgres
-    #       POSTGRES_DB: releasenotes
-    #     # Set health checks to wait until postgres has started
-    #     ports:
-    #       - 5432:5432
-    #     options: >-
-    #       --health-cmd pg_isready
-    #       --health-interval 10s
-    #       --health-timeout 5s
-    #       --health-retries 5
-
     steps:
     - uses: actions/checkout@v2
     - name: Set up Python ${{ matrix.python-version }}
@@ -52,16 +31,14 @@ jobs:
         python manage.py test releasenotes
       env: 
         DJANGO_DEBUG: 1
-        # DATABASE_URL: postgres://postgres:postgres@127.0.0.1:5432/releasenotes
-    # # Uncomment if building to PyPI
-    # - name: Install Build Dependencies
-    #   run: |
-    #     python -m pip install -e .[build]
-    # - name: Build Package
-    #   run: |
-    #     python setup.py sdist bdist_wheel
-    # - name: Publish a Python distribution to PyPI
-    #   uses: pypa/gh-action-pypi-publish@v1.1.0
-    #   with:
-    #     user: __token__
-    #     password: ${{ secrets.pypi_password }}
+    - name: Install Build Dependencies
+      run: |
+        python -m pip install -e .[build]
+    - name: Build Package
+      run: |
+        python setup.py sdist bdist_wheel
+    - name: Publish a Python distribution to PyPI
+      uses: pypa/gh-action-pypi-publish@v1.1.0
+      with:
+        user: __token__
+        password: ${{ secrets.pypi_password }}
