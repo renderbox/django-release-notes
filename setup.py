@@ -65,7 +65,7 @@ setup(
         'docs': [                           # Packages needed to generate docs
             'recommonmark',
             'm2r',
-            'django_extensions',
+            'django-extensions',
             'coverage',
             'Sphinx',
             'recommonmark',
