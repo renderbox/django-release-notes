@@ -14,6 +14,8 @@ import os
 import sys
 import django
 
+from releasenotes.__version__ import VERSION
+
 sys.path.insert(0, os.path.abspath('../develop'))
 os.environ['DJANGO_SETTINGS_MODULE'] = 'develop.settings'
 django.setup()
@@ -26,7 +28,7 @@ copyright = '2020, Grant Viklund'
 author = 'Grant Viklund'
 
 # The full version, including alpha/beta/rc tags
-release = version = releasenotes.__version__.VERSION
+release = version = VERSION
 
 # -- General configuration ---------------------------------------------------
 
