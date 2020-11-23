@@ -26,7 +26,7 @@ copyright = '2020, Grant Viklund'
 author = 'Grant Viklund'
 
 # The full version, including alpha/beta/rc tags
-release = version = django.conf.settings.BUILD_VERSION
+release = version = releasenotes.__version__.VERSION
 
 # -- General configuration ---------------------------------------------------
 
