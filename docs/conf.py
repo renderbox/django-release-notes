@@ -10,15 +10,15 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 
-import os
-import sys
-import django
+# import os
+# import sys
+# import django
 
 from releasenotes.__version__ import VERSION
 
-sys.path.insert(0, os.path.abspath('../develop'))
-os.environ['DJANGO_SETTINGS_MODULE'] = 'develop.settings'
-django.setup()
+# sys.path.insert(0, os.path.abspath('../develop'))
+# os.environ['DJANGO_SETTINGS_MODULE'] = 'develop.settings'
+# django.setup()
 
 
 # -- Project information -----------------------------------------------------
