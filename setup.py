@@ -63,6 +63,7 @@ setup(
             'm2r',
         ],
         'docs': [                           # Packages needed to generate docs
+            'm2r',
             'django_extensions',
             'coverage',
             'Sphinx',
