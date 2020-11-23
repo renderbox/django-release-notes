@@ -45,8 +45,6 @@ extensions = [
     'sphinx.ext.napoleon',
 ]
 
-# source_suffix = ['.rst', '.md']
-
 source_suffix = {
     '.rst': 'restructuredtext',
     '.txt': 'markdown',
