@@ -5,7 +5,7 @@
 {% block title %}{{ object.project.name }} {{object.version_name}} - Release Notes{% endblock %}
 
 {% block release_content %}
-<h1>Project: {{ object.project.name }}</h1>
+<h1>{{ object.project.name }}</h1>
 
 <h3>Release: <a href="{{object.get_absolute_url}}">{{object.version_name}}</a></h3>
 
