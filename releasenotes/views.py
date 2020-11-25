@@ -21,3 +21,12 @@ class ReleaseNotesDetailView(DetailView):
     """
     model = Release
     slug_url_kwarg = "release_slug"
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+
+        context['new_features'] = [ note for note in context['object'].notes.all() if note.note_type == note.NoteType.NEW_FEATURE]
+        context['bug_fixes'] = [ note for note in context['object'].notes.all() if note.note_type == note.NoteType.BUG_FIX]
+        context['known_issues'] = [ note for note in context['object'].notes.all() if note.note_type == note.NoteType.KNOWN_ISSUES]
+
+        return context

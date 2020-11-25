@@ -1,14 +1,36 @@
 {% extends "releasenotes/base.html" %}
+{% load markdownify %}
+{% load i18n %}
 
-{% block title %}Release Notes - Release Details{% endblock %}
+{% block title %}{{ object.project.name }} {{object.version_name}} - Release Notes{% endblock %}
 
-{% block content %}
+{% block release_content %}
 <h1>Project: {{ object.project.name }}</h1>
 
-<h3>Release <a href="{{object.get_absolute_url}}">{{object.version_name}}</a></h3>
+<h3>Release: <a href="{{object.get_absolute_url}}">{{object.version_name}}</a></h3>
 
-{% for note in object.notes.all %}
-<p>{{ note.note_type }}<br>{{ note.description }}</p>
+{% if new_features %}
+<h4>New Features</h4>
+{% for new_feature in new_features %}
+{% if new_feature.audience %}<p>{{ bug_fix.audience.name }}: {% endif %}
+{{ new_feature.description|markdownify }}
 {% endfor %}
+{% endif %}
+
+{% if bug_fixes %}
+<h4>Bug Fixes</h4>
+{% for bug_fix in bug_fixes %}
+{% if bug_fix.audience %}<p>{{ bug_fix.audience.name }}: {% endif %}
+{{ bug_fix.description|markdownify }}
+{% endfor %}
+{% endif %}
+
+{% if known_issues %}
+<h4>Known Issues</h4>
+{% for known_issue in known_issues %}
+{% if known_issue.audience %}<p>{{ bug_fix.audience.name }}: {% endif %}
+{{ known_issue.description|markdownify }}
+{% endfor %}
+{% endif %}
 
 {% endblock %}

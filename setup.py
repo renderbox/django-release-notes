@@ -52,7 +52,8 @@ setup(
             'django-crispy-forms',
             'django-allauth',
             'django-extensions',
-            'ipython',
+            'django-crispy-forms',          # Used in the default templates
+            'django-markdownify',           # Used in the default templates
         ],
         'test': [],                         # Packages needed to run tests
         'prod': [],                         # Packages needed to run in the deployment
@@ -68,7 +69,6 @@ setup(
             'django-extensions',
             'coverage',
             'Sphinx',
-            'recommonmark',
             'rstcheck',
             'sphinx-rtd-theme',  # Assumes a Read The Docs theme for opensource projects
         ],
