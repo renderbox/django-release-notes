@@ -19,6 +19,9 @@ def get_default_site(*args, **kwargs):
 def get_default_language_code(*args, **kwargs):
     return settings.LANGUAGE_CODE
 
+def get_languages(*args, **kwargs):
+    return settings.LANGUAGES
+
 ###############
 # CHOICES
 ###############
@@ -184,9 +187,13 @@ class Translation(CreateUpdateModelBase):
     '''
     This provides a mechanism to have localized release notes
     '''
+    class LANGUAGES(models.TextChoices):
+        EN_US = "en-us", _("English - US")
+        JA = "ja", _("Japanese")
+
     note = models.ForeignKey(Note, verbose_name=_("Note"), on_delete=models.CASCADE, related_name="translations")
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
-    language = models.CharField(_("Language"), max_length=7, blank=False, choices=settings.LANGUAGES, default=get_default_language_code )   # Goal is to not trigger a migration on antoher project
+    language = models.CharField(_("Language"), max_length=7, blank=False, default=get_default_language_code )   # Can't use Choices because it will trigger a migration.  Need to put choices in forms and use a custom validator.
     description = models.TextField(_("Description"))
 
     def __str__(self):
