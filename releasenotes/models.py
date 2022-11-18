@@ -187,7 +187,7 @@ class Translation(CreateUpdateModelBase):
     '''
     This provides a mechanism to have localized release notes
     '''
-    class LANGUAGES(models.TextChoices):
+    class LANGUAGES(models.TextChoices):        # TODO: Move to use django language lists
         EN_US = "en-us", _("English - US")
         JA = "ja", _("Japanese")
 
